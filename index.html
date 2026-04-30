@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador de Enlaces de WhatsApp</title>
+
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --primary: #22c55e;
+      --primary-dark: #16a34a;
+      --border: #e5e7eb;
+      --shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #ecfdf5, var(--bg));
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 4rem);
+      letter-spacing: -0.06em;
+      line-height: 1;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 18px auto 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      backdrop-filter: blur(12px);
+    }
+
+    .card h2 {
+      margin: 0 0 20px;
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 15px 16px;
+      font: inherit;
+      outline: none;
+      background: #fff;
+      transition: 0.2s ease;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.14);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-top: 6px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    button,
+    .open-link {
+      border: 0;
+      border-radius: 15px;
+      padding: 15px 18px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: 0.2s ease;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .secondary {
+      background: #f3f4f6;
+      color: var(--text);
+    }
+
+    .secondary:hover {
+      background: #e5e7eb;
+      transform: translateY(-1px);
+    }
+
+    .result-box {
+      background: #f9fafb;
+      border: 1px dashed #d1d5db;
+      border-radius: 16px;
+      padding: 18px;
+      word-break: break-all;
+      color: #374151;
+      min-height: 90px;
+      line-height: 1.6;
+    }
+
+    .status {
+      margin-top: 14px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      min-height: 22px;
+    }
+
+    .preview {
+      margin-top: 22px;
+      border-radius: 18px;
+      padding: 20px;
+      background: #ecfdf5;
+      border: 1px solid #bbf7d0;
+    }
+
+    .preview strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #166534;
+    }
+
+    .preview p {
+      margin: 0;
+      color: #14532d;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .ad-space {
+      margin-top: 28px;
+      height: 120px;
+      border: 2px dashed #d1d5db;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.5);
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 32px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 840px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 28px 0;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .card {
+        padding: 22px;
+      }
+
+      .buttons {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 2.35rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <section class="hero">
+      <div class="badge">Herramienta gratuita</div>
+      <h1>Generador de Enlaces de WhatsApp</h1>
+      <p>
+        Crea enlaces directos para que tus clientes puedan escribirte por WhatsApp con un mensaje predefinido.
+      </p>
+    </section>
+
+    <section class="app">
+      <div class="card">
+        <h2>Configura tu enlace</h2>
+
+        <div class="field">
+          <label for="phone">Número de teléfono</label>
+          <input id="phone" type="tel" placeholder="Ej: 34600111222" />
+          <div class="hint">Incluye el prefijo del país, sin espacios ni símbolos.</div>
+        </div>
+
+        <div class="field">
+          <label for="message">Mensaje inicial</label>
+          <textarea id="message" placeholder="Hola, quiero más información sobre tus servicios."></textarea>
+        </div>
+
+        <div class="buttons">
+          <button class="primary" id="generateBtn">Generar enlace</button>
+          <button class="secondary" id="clearBtn">Limpiar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Tu enlace generado</h2>
+
+        <div class="result-box" id="result">
+          Completa los campos para generar tu enlace.
+        </div>
+
+        <div class="buttons">
+          <button class="primary" id="copyBtn">Copiar enlace</button>
+          <a class="open-link secondary" id="openLink" href="#" target="_blank" rel="noopener">
+            Abrir WhatsApp
+          </a>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="preview">
+          <strong>Vista previa del mensaje</strong>
+          <p id="previewText">Todavía no hay mensaje.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="ad-space">
+      Espacio reservado para Google AdSense
+    </div>
+
+    <footer>
+      Generador creado en HTML, CSS y JavaScript puro.
+    </footer>
+  </main>
+
+  <script>
+    const phoneInput = document.getElementById("phone");
+    const messageInput = document.getElementById("message");
+    const result = document.getElementById("result");
+    const previewText = document.getElementById("previewText");
+    const statusText = document.getElementById("status");
+    const openLink = document.getElementById("openLink");
+
+    const generateBtn = document.getElementById("generateBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    let generatedUrl = "";
+
+    function cleanPhone(phone) {
+      return phone.replace(/\D/g, "");
+    }
+
+    function generateLink() {
+      const phone = cleanPhone(phoneInput.value);
+      const message = messageInput.value.trim();
+
+      statusText.textContent = "";
+
+      if (!phone) {
+        result.textContent = "Introduce un número de teléfono válido.";
+        openLink.href = "#";
+        generatedUrl = "";
+        return;
+      }
+
+      const encodedMessage = encodeURIComponent(message);
+      generatedUrl = `https://wa.me/${phone}${message ? `?text=${encodedMessage}` : ""}`;
+
+      result.textContent = generatedUrl;
+      openLink.href = generatedUrl;
+      previewText.textContent = message || "Sin mensaje predefinido.";
+    }
+
+    async function copyLink() {
+      if (!generatedUrl) {
+        statusText.textContent = "Primero genera un enlace.";
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(generatedUrl);
+        statusText.textContent = "Enlace copiado al portapapeles.";
+      } catch {
+        statusText.textContent = "No se pudo copiar automáticamente.";
+      }
+    }
+
+    function clearForm() {
+      phoneInput.value = "";
+      messageInput.value = "";
+      generatedUrl = "";
+      result.textContent = "Completa los campos para generar tu enlace.";
+      previewText.textContent = "Todavía no hay mensaje.";
+      statusText.textContent = "";
+      openLink.href = "#";
+    }
+
+    generateBtn.addEventListener("click", generateLink);
+    copyBtn.addEventListener("click", copyLink);
+    clearBtn.addEventListener("click", clearForm);
+
+    phoneInput.addEventListener("input", generateLink);
+    messageInput.addEventListener("input", generateLink);
+  </script>
+</body>
+</html>
